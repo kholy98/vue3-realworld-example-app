@@ -87,6 +87,26 @@ export interface NewComment {
   body: string;
 }
 
+export interface ArticleRevision {
+  id: number;
+  title: string;
+  description: string;
+  body: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  user?: {
+    id: number;
+    username: string;
+    bio: string;
+    image: string;
+  };
+}
+
+export interface ArticleRevisionCollection {
+  revisions: ArticleRevision[];
+}
+
 export interface GenericErrorModel {
   errors: {
     body: string[];
@@ -764,6 +784,68 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       >({
         path: `/articles/${slug}/favorite`,
         method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+        /**
+     * @description Get revisions for an article. Auth is required
+     *
+     * @tags Articles
+     * @name GetArticleRevisions
+     * @summary Get article revisions
+     * @request GET:/articles/{slug}/revisions
+     * @secure
+     */
+    getArticleRevisions: (slug: string, params: RequestParams = {}) =>
+      this.request<ArticleRevisionCollection, GenericErrorModel>({
+        path: `/articles/${slug}/revisions`,
+        method: "GET",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Get a specific revision. Auth is required
+     *
+     * @tags Articles
+     * @name GetArticleRevision
+     * @summary Get article revision
+     * @request GET:/articles/{slug}/revisions/{id}
+     * @secure
+     */
+    getArticleRevision: (slug: string, id: number, params: RequestParams = {}) =>
+      this.request<
+        {
+          revision: ArticleRevision;
+        },
+        GenericErrorModel
+      >({
+        path: `/articles/${slug}/revisions/${id}`,
+        method: "GET",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Revert article to a specific revision. Auth is required
+     *
+     * @tags Articles
+     * @name RevertArticleRevision
+     * @summary Revert article revision
+     * @request POST:/articles/{slug}/revisions/{id}/revert
+     * @secure
+     */
+    revertArticleRevision: (slug: string, id: number, params: RequestParams = {}) =>
+      this.request<
+        {
+          message: string;
+          article: Article;
+        },
+        GenericErrorModel
+      >({
+        path: `/articles/${slug}/revisions/${id}/revert`,
+        method: "POST",
         secure: true,
         ...params,
       }),

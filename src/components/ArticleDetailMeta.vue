@@ -42,6 +42,16 @@
       <span class="counter">({{ article.favoritesCount }})</span>
     </button>
 
+    <!-- Revisions Button -->
+    <button
+      v-if="displayEditButton"
+      aria-label="View revisions"
+      class="btn btn-outline-info btn-sm space"
+      @click="showRevisionsModal = true"
+    >
+      <i class="ion-document-text space" /> Revisions
+    </button>
+
     <AppLink
       v-if="displayEditButton"
       aria-label="Edit article"
@@ -61,10 +71,19 @@
       <i class="ion-trash-a" /> Delete Article
     </button>
   </div>
+
+  <!-- Revisions Modal -->
+  <ArticleRevisionsModal
+      v-if="displayEditButton"
+      :article-slug="article.slug"
+      :is-open="showRevisionsModal"
+      @update:is-open="showRevisionsModal = $event"
+      @reverted="handleArticleReverted"
+    />
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from 'vue'
+import { computed, ref, toRefs } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useFavoriteArticle } from 'src/composable/useFavoriteArticle'
 import { useFollow } from 'src/composable/useFollowProfile'
@@ -72,6 +91,7 @@ import { routerPush } from 'src/router'
 import { api } from 'src/services'
 import type { Article, Profile } from 'src/services/api'
 import { useUserStore } from 'src/store/user'
+import ArticleRevisionsModal from './ArticleRevisionsModal.vue'
 
 interface Props {
   article: Article
@@ -87,6 +107,8 @@ const { article } = toRefs(props)
 const { user, isAuthorized } = storeToRefs(useUserStore())
 const displayEditButton = computed(() => isAuthorized.value && user.value?.username === article.value.author.username)
 const displayFollowButton = computed(() => isAuthorized.value && user.value?.username !== article.value.author.username)
+const showRevisionsModal = ref(false)
+
 
 const { favoriteProcessGoing, favoriteArticle } = useFavoriteArticle({
   isFavorited: computed(() => article.value.favorited),
@@ -107,6 +129,11 @@ const { followProcessGoing, toggleFollow } = useFollow({
     emit('update', newArticle)
   },
 })
+
+function handleArticleReverted(revertedArticle: Article) {
+  emit('update', revertedArticle)
+  showRevisionsModal.value = false
+}
 </script>
 
 <style scoped>
