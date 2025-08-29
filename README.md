@@ -1,75 +1,40 @@
-# ![RealWorld Example App](logo.png)
+# Article Revisions Feature Implementation
 
-[![Codecov branch](https://img.shields.io/codecov/c/github/mutoe/vue3-realworld-example-app/master?logo=codecov&style=for-the-badge)](https://app.codecov.io/gh/mutoe/vue3-realworld-example-app/branch/master)
-[![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/mutoe/vue3-realworld-example-app/test.yml?logo=github&style=for-the-badge)](https://github.com/mutoe/vue3-realworld-example-app/actions?query=branch%3Amaster)
-[![code style](https://img.shields.io/badge/Code_Style-Anthony_Fu-333?style=for-the-badge&logo=eslint)](https://github.com/anthony/eslint-config)
+This project extends the RealWorld example app with a comprehensive article revisions system, allowing authors to view, compare, and revert to previous versions of their articles.
 
-> ### [Vue3](https://v3.vuejs.org/) codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
+## Quick Installation
 
-- [Demo](https://vue3-realworld-example-app-mutoe.vercel.app)
-- [RealWorld](https://github.com/gothinkster/realworld)
+```bash
+# Install dependencies (using --legacy-peer-deps to handle dependency conflicts)
+npm install --legacy-peer-deps
 
-This codebase was created to demonstrate a fully fledged fullstack application built with **Vue3** including CRUD operations, authentication, routing, pagination, and more.
-
-We've gone to great lengths to adhere to the **Vue3** community styleguides & best practices.
-
-For more information on how to this works with other frontends/backends, head over to the [RealWorld](https://github.com/gothinkster/realworld) repo.
-
-# What works?
-
-- [x] [Vite](https://github.com/vitejs/vite)
-- [x] [Composition API](https://composition-api.vuejs.org/)
-- [x] [SFC \<script setup> sugar](https://v3.vuejs.org/api/sfc-script-setup.html)
-- [x] [Suspense](https://v3.vuejs.org/guide/component-dynamic-async.html#using-with-suspense) (Experimental)
-- [x] [Vue router](https://next.router.vuejs.org/)
-- [x] [Pinia](https://pinia.vuejs.org/) for state management
-- [x] [TypeScript](https://www.typescriptlang.org/) and [Vue tsc](https://github.com/johnsoncodehk/volar/tree/master/vue-language-tools/vue-tsc) for static analysis
-- [x] [swagger-typescript-api](https://github.com/acacode/swagger-typescript-api) for auto generate interface from swagger
-- [x] [ESLint](https://eslint.vuejs.org/) and [@mutoe/eslint-config](https://github.com/mutoe/eslint-config) for linting and styling (based on [@anthony/eslint-config](https://github.com/anthony/eslint-config))
-- [x] [Vitest](https://vitest.dev/) for unit testing
-- [x] [Testing Library](https://testing-library.com/docs/vue-testing-library/intro/) for component testing
-- [x] [Cypress](https://docs.cypress.io) for E2E testing
-- [x] [GitHub Actions](https://docs.github.com/en/actions) CI/CD
-
-> Basically, some of they are necessary features for the development of medium to large projects, and you can also use this repository as a starter.
->
-> Enjoy it! 😄
-
-# Getting started
-
-```shell script
-pnpm install
-
-# Development
-pnpm dev
-
-# Build dist
-pnpm build
-
-# Run unit tests
-pnpm test:unit
-pnpm test:unit:ci
-
-# Run E2E tests
-pnpm test:e2e
-pnpm test:e2e:ci
+# Start the development server
+npm run dev
 ```
 
-# Contributors
 
-<a href="https://github.com/mutoe/vue3-realworld-example-app/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=mutoe/vue3-realworld-example-app" />
-</a>
+# Article Revisions Feature
 
-Made with [contributors-img](https://contributors-img.web.app).
+## Overview
 
-## Vue related implementations of the Realworld app
+The revisions system provides authors with complete version history for their articles, including:
 
-- [gothinkster/vue-realworld-example-app](https://github.com/gothinkster/vue-realworld-example-app) - vue2, js
-- [AlexBrohshtut/vue-ts-realworld-app](https://github.com/AlexBrohshtut/vue-ts-realworld-app) - vue2, ts, class-component
-- [devJang/nuxt-realworld](https://github.com/devJang/nuxt-realworld) - nuxt, ts, composition api
-- [levchak0910/vue3-ssr-realworld-example-app](https://github.com/levchak0910/vue3-ssr-realworld-example-app) - vue3, ssr
+- **View all previous versions** - Access the complete history of article changes
+- **See revision details** - Examine title, description, and body content for each version
+- **Compare changes between versions** - Visual diff functionality to see what changed
+- **Revert to any previous version** - Restore article content to any historical state
+- **Audit trail with timestamps and author information** - Track who made changes and when
 
-## Sponsor
+## Backend Implementation (Laravel PHP)
 
-Thanks **JetBrains** for providing IDE support!
+### API Endpoints
+
+```php
+// Get all revisions for an article
+GET /api/articles/{article}/revisions
+
+// Get specific revision details
+GET /api/articles/{article}/revisions/{revision}
+
+// Revert article to a specific revision
+POST /api/articles/{article}/revisions/{revision}/revert
